@@ -13,29 +13,31 @@
 	</head>
 <body>
 
-<div class="cell">
-  <div class="off-canvas-wrapper">
-    <div class="off-canvas position-left" id="offCanvasLeft1" data-off-canvas>
-	<ul class="menu vertical">
-		<li><a href="/caesar-cipher">Caesar  Ciphers</a></li>
-		<li><a href="/transposition-cipher">Transposition Cipher</a></li>
-	</ul>
-    </div>
-    
-    <div class="off-canvas-content" data-off-canvas-content>
-	    <div class="title-bar">
-  <div class="title-bar-left">
-    <button class="menu-icon" type="button" data-open="offCanvasLeft1"></button>
-    <span class="title-bar-title">Python developer tools</span>
-  </div>
+  <div class="cell">
+    <div class="off-canvas-wrapper">
+      <div class="off-canvas position-left" id="offCanvasLeft1" data-off-canvas>
+        <ul class="menu vertical">
+          <li><a href="/caesar-cipher">Caesar  Ciphers</a></li>
+          <li><a href="/transposition-cipher">Transposition Cipher</a></li>
+        </ul>
+      </div>
 
-</div>
-<div class="grid-x">
-<div class="cell">
-      {% block content %}{% endblock %}
-</div> </div></div>
+      <div class="off-canvas-content" data-off-canvas-content>
+        <div class="title-bar">
+          <div class="title-bar-left">
+            <button class="menu-icon" type="button" data-open="offCanvasLeft1"></button>
+            <span class="title-bar-title">Python developer tools</span>
+          </div>
+
+        </div>
+        <div class="grid-x grid-padding-x">
+          <div class="cell ">
+            {% block content %}{% endblock %}
+          </div> 
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 <script>
       $(document).foundation();
     </script>
