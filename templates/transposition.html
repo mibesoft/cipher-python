@@ -1,0 +1,8 @@
+{% extends 'base.html' %}                                                                       {% block content %}                               <form method="post">                              <label for="username">Plain text</label>          <textarea name="message"></textarea>
+	
+	<button class="button">
+		<span>Encrypt</span></button>
+
+	<label for="password">Encrypted message</label>          <textarea> {{ translated}}</textarea>
+  </form>
+{% endblock %}
