@@ -1,9 +1,11 @@
 from flask import Flask, flash, redirect, render_template, request, url_for
+from flask_socketio import SocketIO
 
 import random, sys, transposition
 transpositioncipher=transposition
 app = Flask(__name__)
-app.secret_key = 'random string'
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
 
 @app.route('/')
 def index():
