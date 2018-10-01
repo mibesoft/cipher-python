@@ -21,7 +21,7 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
-def query_db(query, args=(), one=False):
+def query_db(query, args=(), one=True):
     cur = get_db().execute(query, args)
     rv = cur.fetchall()
     print(rv)
@@ -42,21 +42,21 @@ def caesar():
 @app.route('/wordpress',methods = ['GET', 'POST'])
 def wordpress():
     if request.method == 'POST':
-      sql="INSERT INTO themes (value) VALUES ('"+json.dumps(request.form)+"')"
-      theme = query_db(sql)
-      return render_template('wordpress.html')
+        sql="INSERT INTO theme (value) VALUES ('"+json.dumps(request.form)+"')"
+        print(sql)
+        theme = query_db(sql)
+        return render_template('wordpress.html')
     else:
-      sql="select * from themes"
-      theme = query_db(sql)
-      print(theme)
-      return render_template('wordpress.html')
+        sql="select * from theme"
+        print(sql)
+        theme = query_db(sql)
+        print(theme)
+        return render_template('wordpress.html')
 @app.route('/transposition-cipher',methods = ['GET', 'POST'])
 def transposition():
     if request.method == 'POST':
         if request.form['message']:
             translated=transpositioncipher.encryptMessage(4,request.form['message'])
-
-
             return render_template('transposition.html',translated = translated)
         
     return render_template('transposition.html')
