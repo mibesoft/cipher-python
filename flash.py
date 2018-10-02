@@ -1,9 +1,10 @@
-from flask import Flask, flash, redirect, render_template, request, url_for,g
+from flask import Flask, flash, redirect, render_template,render_template_string, request, url_for,g
 from flask_socketio import SocketIO
 import sqlite3,json
+from lib import transposition
 
 
-import random, sys, transposition
+import random, sys 
 DATABASE = 'data/database.db'
 transpositioncipher=transposition
 app = Flask(__name__)
@@ -49,7 +50,6 @@ def wordpress():
         return render_template('wordpress.html')
     else:
         sql="select * from themes where ID=?"
-        print(sql)
         theme = query_db(sql,[9], one=True)
         allthemes=[]
         for row in query_db('select * from themes'):
@@ -61,6 +61,21 @@ def wordpress():
         themevalue=json.loads(theme[1])
         #print(themevalue['theme_name'])
         return render_template('wordpress.html',themevalue=themevalue,allthemes=allthemes)
+@app.route('/wordpress/generate',methods = ['POST'])
+def generate():
+    if request.method == 'POST':
+        if request.form['theme']:
+            sql="select * from themes where ID=?"
+            theme = query_db(sql,[request.form['theme']], one=True)
+            themevalue=json.loads(theme[1])
+            rendered=render_template('wordpress/theme.html',themevalue=themevalue)
+            file = open("themes/wordpress/index.php",'w+') 
+            file.write(rendered)
+            file.close() 
+
+            #print(rendered);
+            return render_template('wordpress-generate.html',themevalue=themevalue)
+    return render_template('wordpress-generate.html')
 @app.route('/transposition-cipher',methods = ['GET', 'POST'])
 def transposition():
     if request.method == 'POST':
