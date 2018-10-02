@@ -1,8 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}                               <form method="post">
 
-	<label for="theme_name">Theme name</label><input name="theme_name">
-	<label for="style_bg_color">Background color</label><input name="style_bg_color">
+	<h2>Please select theme</h2>
+	<select name="theme">
+		<option>Please select theme</option>
+		{% for theme in allthemes %}
+		    <option value="{{theme.id}}">{{theme.name}}</option>
+		  {% endfor %}
+
+
+	</select>
+	<label for="theme_name">Theme name</label><input name="theme_name" value="{{ themevalue.theme_name }}">
+	<label for="style_bg_color">Background color</label><input name="style_bg_color" value="{{ themevalue.style_bg_color }}">
 	<label for="menu_type">Menu type</label>
 	<select name="menu_type">
 		<option value="dropdown">Drop down</option>

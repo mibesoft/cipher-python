@@ -21,10 +21,12 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
-def query_db(query, args=(), one=True):
+def query_db(query, args=(), one=False):
+    db = get_db()
     cur = get_db().execute(query, args)
     rv = cur.fetchall()
-    print(rv)
+    #print(rv)
+    db.commit()
     cur.close()
     return (rv[0] if rv else None) if one else rv
 def init_db():
@@ -42,23 +44,29 @@ def caesar():
 @app.route('/wordpress',methods = ['GET', 'POST'])
 def wordpress():
     if request.method == 'POST':
-        sql="INSERT INTO theme (value) VALUES ('"+json.dumps(request.form)+"')"
-        print(sql)
+        sql="INSERT INTO themes (value) VALUES ('"+json.dumps(request.form)+"')"
         theme = query_db(sql)
         return render_template('wordpress.html')
     else:
-        sql="select * from theme"
+        sql="select * from themes where ID=?"
         print(sql)
-        theme = query_db(sql)
-        print(theme)
-        return render_template('wordpress.html')
+        theme = query_db(sql,[9], one=True)
+        allthemes=[]
+        for row in query_db('select * from themes'):
+            try:
+                if json.loads(row[1]):
+                    allthemes.append({'id':row[0],'name':json.loads(row[1])['theme_name']})
+            except ValueError:
+                print("Error")
+        themevalue=json.loads(theme[1])
+        #print(themevalue['theme_name'])
+        return render_template('wordpress.html',themevalue=themevalue,allthemes=allthemes)
 @app.route('/transposition-cipher',methods = ['GET', 'POST'])
 def transposition():
     if request.method == 'POST':
         if request.form['message']:
             translated=transpositioncipher.encryptMessage(4,request.form['message'])
             return render_template('transposition.html',translated = translated)
-        
     return render_template('transposition.html')
 @socketio.on('message')
 def handle_message(message):
@@ -74,8 +82,6 @@ def login():
       else:
          flash('You were successfully logged in')
          return redirect(url_for('index'))
-			
    return render_template('login.html', error = error)
-
 if __name__ == "__main__":
   app.run(debug = True)

@@ -1,5 +1,1 @@
-CREATE TABLE themes (
-  id int auto_increment,
-  value varchar(500) NOT NULL default '',
-  PRIMARY KEY  (id)
-);
+CREATE TABLE themes(ID INTEGER PRIMARY KEY AUTOINCREMENT,value TEXT NOT NULL)
