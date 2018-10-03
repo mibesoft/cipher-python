@@ -1,10 +1,9 @@
 from flask import Flask, flash, redirect, render_template,render_template_string, request, url_for,g
 from flask_socketio import SocketIO
-import sqlite3,json
+import sqlite3,json,os,random, sys 
 from lib import transposition
 
 
-import random, sys 
 DATABASE = 'data/database.db'
 transpositioncipher=transposition
 app = Flask(__name__)
@@ -36,6 +35,16 @@ def init_db():
         with app.open_resource('data/schema.sql', mode='r') as f:
             db.cursor().executescript(f.read())
         db.commit()
+def create_template(template,wp_template,args):
+    path=wp_template[:wp_template.rfind('/')]
+    print(path)
+    if not os.path.exists(path):
+        os.makedirs(path)
+        #print("File exist")
+    rendered=render_template(template,themevalue=args)
+    file = open(wp_template,'w+') 
+    file.write(rendered)
+    file.close() 
 @app.route('/')
 def index():
    return render_template('index.html')
@@ -68,10 +77,17 @@ def generate():
             sql="select * from themes where ID=?"
             theme = query_db(sql,[request.form['theme']], one=True)
             themevalue=json.loads(theme[1])
-            rendered=render_template('wordpress/theme.html',themevalue=themevalue)
-            file = open("themes/wordpress/index.php",'w+') 
-            file.write(rendered)
-            file.close() 
+            for path, subdirs, files in os.walk('templates/wordpress/Foundation'):
+                for name in files:
+                    #print (os.path.join(path, name))
+                    template_path=os.path.join(path, name)
+                    create_template(template_path[10:],'themes/wordpress/'+themevalue['theme_name']+template_path[30:],themevalue)
+
+
+            
+            #create_template('header.php',themevalue['theme_name']+'/header.php',themevalue)
+            #create_template('template-full-width.html',themevalue['theme_name']+'/template-full-width.php',themevalue)
+            #create_template('style.css',themevalue['theme_name']+'/style.css',themevalue)
 
             #print(rendered);
             return render_template('wordpress-generate.html',themevalue=themevalue)
