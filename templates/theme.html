@@ -1,0 +1,28 @@
+{% extends 'base2.html' %}
+{% block content %} 
+<h2>Theme manager</h2>
+<div class="row">
+<table class="responsive-card-table unstriped">
+<thead>
+    <tr>
+    	<th>Preview</th>
+      <th>Theme name</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+  	{% for theme in allthemes %}
+	<tr>
+	<td>{{ theme.name }}</td>
+		<td>{{ theme.name }}</td>
+		<td><a href="/theme/edit?id={{ theme.id }}">Edit</a> | <a href="/wordpress/generate?id={{ theme.id }}">Wordpress generate</a> | <a href="/magento/generate?id={{ theme.id }}">Magento generate</a></td>
+	</tr>
+
+  {% endfor %}
+  </tbody>
+	
+</table>
+	
+</div>                              
+
+{% endblock %}

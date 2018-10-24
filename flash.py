@@ -51,12 +51,12 @@ def index():
 @app.route('/caesar-cipher',methods = ['GET', 'POST'])
 def caesar():
     return render_template('caesar.html')
-@app.route('/wordpress',methods = ['GET', 'POST'])
-def wordpress():
+@app.route('/theme',methods = ['GET', 'POST'])
+def theme():
     if request.method == 'POST':
         sql="INSERT INTO themes (value) VALUES ('"+json.dumps(request.form)+"')"
         theme = query_db(sql)
-        return render_template('wordpress.html')
+        return render_template('theme.html')
     else:
         sql="select * from themes where ID=?"
         theme = query_db(sql,[9], one=True)
@@ -69,9 +69,38 @@ def wordpress():
                 print("Error")
         themevalue=json.loads(theme[1])
         #print(themevalue['theme_name'])
-        return render_template('wordpress.html',themevalue=themevalue,allthemes=allthemes)
-@app.route('/wordpress/generate',methods = ['POST'])
-def generate():
+        return render_template('theme.html',themevalue=themevalue,allthemes=allthemes)
+@app.route('/wordpress/generate',methods = ['GET'])
+def wordpressGenerate():
+    if request.method == 'POST':
+        if request.form['theme']:
+            sql="select * from themes where ID=?"
+            theme = query_db(sql,[request.form['theme']], one=True)
+            themevalue=json.loads(theme[1])
+            for path, subdirs, files in os.walk('templates/wordpress/Foundation'):
+                for name in files:
+                    #print (os.path.join(path, name))
+                    template_path=os.path.join(path, name)
+                    create_template(template_path[10:],'themes/wordpress/'+themevalue['theme_name']+template_path[30:],themevalue)
+            return render_template('grapeedit.html',themevalue=themevalue)
+    return render_template('grapeedit.html')
+
+@app.route('/magento/generate',methods = ['GET'])
+def magentoGenerate():
+    if request.method == 'POST':
+        if request.form['theme']:
+            sql="select * from themes where ID=?"
+            theme = query_db(sql,[request.form['theme']], one=True)
+            themevalue=json.loads(theme[1])
+            for path, subdirs, files in os.walk('templates/wordpress/Foundation'):
+                for name in files:
+                    #print (os.path.join(path, name))
+                    template_path=os.path.join(path, name)
+                    create_template(template_path[10:],'themes/wordpress/'+themevalue['theme_name']+template_path[30:],themevalue)
+            return render_template('grapeedit.html',themevalue=themevalue)
+    return render_template('grapeedit.html')
+@app.route('/theme/edit',methods = ['POST','GET'])
+def grapeedit():
     if request.method == 'POST':
         if request.form['theme']:
             sql="select * from themes where ID=?"
@@ -90,8 +119,13 @@ def generate():
             #create_template('style.css',themevalue['theme_name']+'/style.css',themevalue)
 
             #print(rendered);
-            return render_template('wordpress-generate.html',themevalue=themevalue)
+            return render_template('grapeedit.html',themevalue=themevalue)
+    return render_template('grapeedit.html')
+
+@app.route('/theme/store',methods = ['POST'])
+def store():
     return render_template('wordpress-generate.html')
+
 @app.route('/transposition-cipher',methods = ['GET', 'POST'])
 def transposition():
     if request.method == 'POST':
