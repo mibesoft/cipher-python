@@ -1,4 +1,4 @@
-from flask import Flask, flash, redirect, render_template,render_template_string, request, url_for,g
+from flask import Flask, flash,make_response, redirect, render_template,render_template_string, request, url_for,g
 from flask_socketio import SocketIO
 import sqlite3,json,os,random, sys 
 from lib import transposition
@@ -35,6 +35,18 @@ def init_db():
         with app.open_resource('data/schema.sql', mode='r') as f:
             db.cursor().executescript(f.read())
         db.commit()
+def save_theme(request,theme_id):
+    db = get_db()
+    
+
+    query="UPDATE themes SET `gjs-assets` = '"+request['gjs-assets']+"', `gjs-css` = '"+request['gjs-css']+"',`gjs-styles`='"+request['gjs-styles']+"',`gjs-html`='"+request['gjs-html']+"',`gjs-components`='"+request['gjs-components']+"' WHERE id="+str(theme_id)
+    #query="alter table themes add column `gjs-components` TEXT"
+    print(query);
+    cur = get_db().execute(query)
+    #rv = cur.fetchall()
+    #print(rv)
+    db.commit()
+    cur.close()
 def create_template(template,wp_template,args):
     path=wp_template[:wp_template.rfind('/')]
     print(path)
@@ -62,6 +74,7 @@ def theme():
         theme = query_db(sql,[9], one=True)
         allthemes=[]
         for row in query_db('select * from themes'):
+            print(row)
             try:
                 if json.loads(row[1]):
                     allthemes.append({'id':row[0],'name':json.loads(row[1])['theme_name']})
@@ -124,7 +137,23 @@ def grapeedit():
 
 @app.route('/theme/store',methods = ['POST'])
 def store():
-    return render_template('wordpress-generate.html')
+    save_theme(request.form,request.args.get('id'))
+    #return render_template('wordpress-generate.html')
+
+    error = None
+    return render_template('login.html', error = error)
+@app.route('/theme/load',methods = ['GET'])
+def load():
+    theme_id=request.args.get('id')
+
+    sql="select `gjs-assets`,`gjs-css`,`gjs-styles`,`gjs-components`,`gjs-html` from themes where ID=?"
+
+    
+    theme = query_db(sql,[theme_id], one=True)
+    resp = make_response(json.dumps({'gjs-assets':theme[0],'gjs-css':theme[1],'gjs-styles':theme[2],'gjs-components':theme[3],'gjs-html':theme[4]}), 200)
+    resp.headers['Content-Type'] = 'application/json'
+    return resp
+    return json.dumps({'gjs-assets':theme[0],'gjs-css':theme[1],'gjs-styles':theme[2],'gjs-components':theme[3]})
 
 @app.route('/transposition-cipher',methods = ['GET', 'POST'])
 def transposition():

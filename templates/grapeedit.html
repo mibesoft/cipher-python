@@ -1,4 +1,4 @@
-{% extends 'base2.html' %}
+{% extends 'grapes.html' %}
 {% block content %} 
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/grapes.min.css') }}">
@@ -119,12 +119,14 @@ margin: 0;}
         fromElement: true,
           storageManager: {
           type: 'remote',
+          autoload:true,
           stepsBeforeSave: 3,
           urlStore: '/theme/store?id=8',
           urlLoad: '/theme/load?id=8',
-          // For custom parameters/headers on requests
-          params: { _some_token: '....' },
-          headers: { Authorization: 'Basic ...' },
+          storeComponents: true,  // Enable/Disable storing of components in JSON format
+	      storeStyles: true,      // Enable/Disable storing of rules in JSON format
+	      storeHtml: true,        // Enable/Disable storing of components as HTML string
+	      storeCss: true         // Enable/Disable storing of rules as CSS string
         },
         plugins: ['foundationPlugin'],
         pluginsOpts: {

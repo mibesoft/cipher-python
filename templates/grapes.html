@@ -44,13 +44,30 @@
     <script type="text/javascript">
 
     function foundationPlugin(editor,option){
-      console.log(option);
+      // console.log(option);
+      
+
+      editor.BlockManager.add('grid-container', {
+        category: 'Basic',
+        label: 'Grid Container',
+        attributes: {class:'gjs-fonts gjs-f-b1'},
+        content: '<div class="grid-container"></div>',
+      });
+
+      editor.BlockManager.add('grid-container-fluid', {
+        category: 'Basic',
+        label: 'Grid Container Fluid',
+        attributes: {class:'gjs-fonts gjs-f-b1'},
+        content: '<div class="grid-container fluid"></div>',
+      });
+
       editor.BlockManager.add('1-column', {
         category: 'Basic',
         label: '1 Column',
         attributes: {class:'gjs-fonts gjs-f-b1'},
         content: '<div class="grid-x"><div class="cell"></div></div>',
       });
+
 
       editor.BlockManager.add('2-column', {
         category: 'Basic',
@@ -79,6 +96,8 @@
         label: '4-8 columns',
         content: '<div class="grid-x"><div class="cell medium-4"></div><div class="cell medium-8"></div></div>',
       });
+
+
       editor.BlockManager.add('dropdown', {
         category: 'Navigation',
 
@@ -128,13 +147,12 @@
         height: '100%',
         fromElement: true,
           storageManager: {
-          type: 'remote',
+          type: 'local',
           stepsBeforeSave: 3,
           urlStore: '/theme/store?id=8',
           urlLoad: '/theme/load?id=8',
           // For custom parameters/headers on requests
-          params: { _some_token: '....' },
-          headers: { Authorization: 'Basic ...' },
+          
         },
         plugins: ['foundationPlugin'],
         pluginsOpts: {
