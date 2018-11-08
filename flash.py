@@ -133,7 +133,16 @@ def grapeedit():
 
             #print(rendered);
             return render_template('grapeedit.html',themevalue=themevalue)
-    return render_template('grapeedit.html')
+    if request.method == 'GET':
+        theme_id=request.args.get('id')
+
+        sql="select `gjs-assets`,`gjs-css`,`gjs-styles`,`gjs-components`,`gjs-html` from themes where ID=?"
+
+    
+        theme = query_db(sql,[theme_id], one=True)
+        themevalue={'assets':theme[0],'css':theme[1],'styles':theme[2],'components':theme[3],'html':theme[4]}
+        return render_template('grapeedit.html',themevalue=themevalue)
+    
 
 @app.route('/theme/store',methods = ['POST'])
 def store():
