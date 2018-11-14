@@ -1,0 +1,37 @@
+{{!-- This is the base layout for your project, and will be used on every page unless specified. --}}
+
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{meta-title}} | Python Tools</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{root}}assets/css/app.css">
+  </head>
+  <body class="{{page}} {{layout}}">
+
+        <header>
+          <div class="grid-container">
+            <div class="logo">
+              <div class="grid-x">
+                <div class="small-6 medium-4 large-3 cell"><h1>Logo</h1></div>
+                <div class="small-6 medium-8 large-9 cell">{{> hover-underline-menu}}</div>
+              </div>
+
+              
+            </div>
+          </div>
+          
+        </header>
+        
+          {{> body}}
+
+          
+        {{> marketing-site-footer}}
+
+
+    <script src="{{root}}assets/js/app.js"></script>
+  </body>
+</html>
